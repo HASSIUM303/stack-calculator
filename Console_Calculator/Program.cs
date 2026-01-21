@@ -11,7 +11,25 @@ class Program
 
    static bool ValidateAllBrackets(string brackets)
    {
+      if (!IsStringBracketSequence(brackets)) return false;
 
+      Stack<char> stack = new Stack<char>();
+
+      foreach (char currentBracket in brackets)
+      {
+         if (Brackets.ContainsKey(currentBracket))
+            stack.Push(currentBracket);
+         else if (Brackets.ContainsValue(currentBracket))
+         {
+            if (stack.Count == 0)
+               return false;
+
+            if (Brackets[stack.Pop()] != currentBracket)
+               return false;
+         }
+      }
+
+      return stack.Count == 0;
    }
    static bool IsStringBracketSequence(string str)
    {
