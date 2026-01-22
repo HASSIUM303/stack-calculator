@@ -6,7 +6,12 @@ class Program
 {
    static void Main()
    {
+      while (true)
+      {
+         string input = Console.ReadLine() ?? "exit";
 
+         if (input == "exit") break;
+      }
    }
 }
 class Operation
