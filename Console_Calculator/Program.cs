@@ -23,7 +23,7 @@ class Program
 
    static bool ValidateAllBrackets(string brackets)
    {
-      if (!IsStringBracketSequence(brackets)) return false;
+      brackets = StringToBracketSequence(brackets);
 
       Stack<char> stack = new Stack<char>();
 
@@ -44,13 +44,14 @@ class Program
       return stack.Count == 0;
    }
 
-   static bool IsStringBracketSequence(string str)
+   static string StringToBracketSequence(string str)
    {
+      string result = "";
       foreach (char s in str)
-         if (!(Brackets.ContainsKey(s) || Brackets.ContainsValue(s)))
-            return false;
+         if (Brackets.ContainsKey(s) || Brackets.ContainsValue(s))
+            result += s;
 
-      return true;
+      return result;
    }
 }
 class Operation
