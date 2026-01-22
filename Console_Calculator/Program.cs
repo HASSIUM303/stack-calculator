@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 public delegate double MathOperationDelegate(double num1, double num2);
 
@@ -19,10 +18,6 @@ class Program
          string input = Console.ReadLine() ?? "exit";
 
          if (input == "exit") break;
-
-         if (!IsStringBracketSequence(input)) continue;
-
-         if (!ValidateAllBrackets(input)) continue;
       }
    }
 
