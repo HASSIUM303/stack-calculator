@@ -34,7 +34,16 @@ partial class Program
                numberBuffer = "";
             }
          }
-         else if (Brackets.ContainsKey(c) || Brackets.ContainsValue(c) || Operations.ContainsKey(c.ToString()))
+         else if (Brackets.ContainsKey(c) || Brackets.ContainsValue(c))
+         {
+            if (numberBuffer != "")
+            {
+               tokens.Add(double.Parse(numberBuffer));
+               numberBuffer = "";
+            }
+            tokens.Add(c.ToString());
+         }
+         else if (Operations.ContainsKey(c.ToString()))
          {
             if (numberBuffer != "")
             {
@@ -106,7 +115,7 @@ partial class Program
 
             if (o.IsDependenceOfOrder) //TODO: Сделать что то с этим свойством в будущем
             {
-               double temp1 = (double)stack. Pop();
+               double temp1 = (double)stack.Pop();
                double temp2 = (double)stack.Pop();
                stack.Push(o.OperationMeth(temp2, temp1));
             }
@@ -115,7 +124,7 @@ partial class Program
          }
       }
 
-      if (stack.Count != 1) 
+      if (stack.Count != 1)
          throw new ArgumentException("Ошибка: в вычислительном стеке больше одного элемента");
 
       return (double)stack.Pop();
@@ -167,7 +176,7 @@ class Operation
       if (Priority >= 0) this.Priority = (uint)Priority;
       else this.Priority = 0;
 
-      OperationMeth += meth;
+      OperationMeth += meth; //TODO:
 
       IsDependenceOfOrder = isOrder;
    }
