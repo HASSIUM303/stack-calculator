@@ -6,16 +6,56 @@ partial class Program
      {'[', ']'},
      {'{', '}'}
    };
+   public static Dictionary<string, Operation> Operations { get; } = new Dictionary<string, Operation>
+   {
+      { "+", new Operation("+", 1, (a, b) => a + b, false) },
+      { "-", new Operation("-", 1, (a, b) => a - b, true) },
+      { "*", new Operation("*", 2, (a, b) => a * b, false) },
+      { "/", new Operation("/", 2, (a, b) => a / b, true) },
+      //{ "^", new Operation("^", 3, (a, b) => Math.Pow(a, b), false) } //TODO: Протестировать является ли степень правой ассоциативной
+   };
 
-   // static object[] InfixToPostfix(object[] infix)
-   // {
-   //    List<object> postfix = new List<object>();
-   //    Stack<Operation> operations = new Stack<Operation>();
+   static object[] InfixToPostfix(object[] infix)
+   {
+      List<object> postfix = new List<object>();
+      Stack<object> stack = new Stack<object>();
 
+      for (int i = 0; i < infix.Length; i++)
+      {
+         if (infix[i] is double)
+            postfix.Add(infix[i]);
+         else if (infix[i] is Operation obj)
+         {
+            if (stack.Count == 0 || stack.Peek() is string)
+               stack.Push(obj);
+            else if (stack.Peek() is Operation)
+            {
+               while (((Operation)stack.Peek()).Priority >= obj.Priority)
+               {
+                  postfix.Add(stack.Pop());
+                  if (stack.Count == 0 || stack.Peek() is not Operation) break;
+               }
+               stack.Push(obj);
+            }
+         }
+         else if (infix[i] is string s && s.Length == 1)
+         {
+            if (Brackets.ContainsKey(s[0]))
+               stack.Push(s);
+            else if (Brackets.ContainsValue(s[0]))
+            {
+               while (stack.Peek() is not string) //Может вызвать проблемы в будущем, если будут другие типы
+                  postfix.Add(stack.Pop());
+               stack.Pop();
+            }
+         }
+      }
 
+      while (stack.Count > 0)
+         postfix.Add(stack.Pop());
 
-   //    return postfix.ToArray();
-   // }
+      return postfix.ToArray();
+   }
    static bool ValidateAllBrackets(string brackets)
    {
       brackets = StringToBracketSequence(brackets);
@@ -38,7 +78,6 @@ partial class Program
 
       return stack.Count == 0;
    }
-
    static string StringToBracketSequence(string str)
    {
       string result = "";
@@ -48,7 +87,6 @@ partial class Program
 
       return result;
    }
-
    static object[] ParseInfixExpression(string expression)
    {
       List<object> tokens = new List<object>();
@@ -68,14 +106,14 @@ partial class Program
                numberBuffer = "";
             }
          }
-         else if (Brackets.ContainsKey(c) || Brackets.ContainsValue(c) || "+-*/^".Contains(c))
+         else if (Brackets.ContainsKey(c) || Brackets.ContainsValue(c) || Operations.ContainsKey(c.ToString()))
          {
             if (numberBuffer != "")
             {
                tokens.Add(double.Parse(numberBuffer));
                numberBuffer = "";
             }
-            tokens.Add(c);
+            tokens.Add(Operations[c.ToString()]);
          }
       }
 
