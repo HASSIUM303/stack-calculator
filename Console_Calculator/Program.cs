@@ -8,6 +8,7 @@ partial class Program
       {
          Console.Write(">");
          string input = Console.ReadLine() ?? "exit";
+         if (input == "exit") break;
 
          Console.WriteLine("\nВаш ввод с точки зрения скобок: " +
          (ValidateAllBrackets(input) ? "корректен" : "некорректен"));
@@ -31,8 +32,6 @@ partial class Program
          {
             Console.WriteLine(ex.Message);
          }       
-
-         if (input == "exit") break;
       }
    }
 }
