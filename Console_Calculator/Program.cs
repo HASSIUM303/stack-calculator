@@ -29,7 +29,7 @@ partial class Program
          }
          catch (Exception ex)
          {
-            Console.WriteLine("Ошибка: " + ex.Message);
+            Console.WriteLine(ex.Message);
          }       
 
          if (input == "exit") break;

@@ -15,34 +15,40 @@ partial class Program
       //{ "^", new Operation("^", 3, (a, b) => Math.Pow(a, b), false) } //TODO: Протестировать является ли степень правой ассоциативной
    };
 
-   static double CalculatePostfix(object[] postfix)
+   static object[] ParseInfixExpression(string expression)
    {
-      Stack<object> stack = new();
+      List<object> tokens = new List<object>();
+      string numberBuffer = "";
 
-      for (int i = 0; i < postfix.Length; i++)
+      foreach (char c in expression)
       {
-         if (postfix[i] is double d)
-            stack.Push(d);
-         else if (postfix[i] is Operation o)
+         if (char.IsDigit(c) || c == '.')
          {
-            if (stack.Count < 2)
-               throw new ArgumentException("Ошибка: недостаточно операндов");
-
-            if (o.IsDependenceOfOrder) //TODO: Сделать что то с этим свойством в будущем
+            numberBuffer += c;
+         }
+         else if (char.IsWhiteSpace(c))
+         {
+            if (numberBuffer != "")
             {
-               double temp1 = (double)stack. Pop();
-               double temp2 = (double)stack.Pop();
-               stack.Push(o.OperationMeth(temp2, temp1));
+               tokens.Add(double.Parse(numberBuffer));
+               numberBuffer = "";
             }
-            else //По сути без полезное условие
-               stack.Push(o.OperationMeth((double)stack.Pop(), (double)stack.Pop()));
+         }
+         else if (Brackets.ContainsKey(c) || Brackets.ContainsValue(c) || Operations.ContainsKey(c.ToString()))
+         {
+            if (numberBuffer != "")
+            {
+               tokens.Add(double.Parse(numberBuffer));
+               numberBuffer = "";
+            }
+            tokens.Add(Operations[c.ToString()]);
          }
       }
 
-      if (stack.Count != 1) 
-         throw new ArgumentException("Ошибка: в вычислительном стеке больше одного элемента");
+      if (numberBuffer != "")
+         tokens.Add(double.Parse(numberBuffer));
 
-      return (double)stack.Pop();
+      return tokens.ToArray();
    }
    static object[] InfixToPostfix(object[] infix)
    {
@@ -85,6 +91,35 @@ partial class Program
 
       return postfix.ToArray();
    }
+   static double CalculatePostfix(object[] postfix)
+   {
+      Stack<object> stack = new();
+
+      for (int i = 0; i < postfix.Length; i++)
+      {
+         if (postfix[i] is double d)
+            stack.Push(d);
+         else if (postfix[i] is Operation o)
+         {
+            if (stack.Count < 2)
+               throw new ArgumentException("Ошибка: недостаточно операндов");
+
+            if (o.IsDependenceOfOrder) //TODO: Сделать что то с этим свойством в будущем
+            {
+               double temp1 = (double)stack. Pop();
+               double temp2 = (double)stack.Pop();
+               stack.Push(o.OperationMeth(temp2, temp1));
+            }
+            else //По сути без полезное условие
+               stack.Push(o.OperationMeth((double)stack.Pop(), (double)stack.Pop()));
+         }
+      }
+
+      if (stack.Count != 1) 
+         throw new ArgumentException("Ошибка: в вычислительном стеке больше одного элемента");
+
+      return (double)stack.Pop();
+   }
    static bool ValidateAllBrackets(string brackets)
    {
       brackets = StringToBracketSequence(brackets);
@@ -115,41 +150,6 @@ partial class Program
             result += s;
 
       return result;
-   }
-   static object[] ParseInfixExpression(string expression)
-   {
-      List<object> tokens = new List<object>();
-      string numberBuffer = "";
-
-      foreach (char c in expression)
-      {
-         if (char.IsDigit(c) || c == '.')
-         {
-            numberBuffer += c;
-         }
-         else if (char.IsWhiteSpace(c))
-         {
-            if (numberBuffer != "")
-            {
-               tokens.Add(double.Parse(numberBuffer));
-               numberBuffer = "";
-            }
-         }
-         else if (Brackets.ContainsKey(c) || Brackets.ContainsValue(c) || Operations.ContainsKey(c.ToString()))
-         {
-            if (numberBuffer != "")
-            {
-               tokens.Add(double.Parse(numberBuffer));
-               numberBuffer = "";
-            }
-            tokens.Add(Operations[c.ToString()]);
-         }
-      }
-
-      if (numberBuffer != "")
-         tokens.Add(double.Parse(numberBuffer));
-
-      return tokens.ToArray();
    }
 }
 
