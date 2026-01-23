@@ -17,6 +17,9 @@ partial class Program
 
    static object[] ParseInfixExpression(string expression)
    {
+      if (string.IsNullOrWhiteSpace(expression))
+         throw new ArgumentException("Выражение не может быть пустым");
+
       List<object> tokens = new List<object>();
       string numberBuffer = "";
 
