@@ -15,6 +15,10 @@ partial class Program
       //{ "^", new Operation("^", 3, (a, b) => Math.Pow(a, b), false) } //TODO: Протестировать является ли степень правой ассоциативной
    };
 
+   static double CalculatePostfix(object[] postfix)
+   {
+      
+   }
    static object[] InfixToPostfix(object[] infix)
    {
       List<object> postfix = new List<object>();
