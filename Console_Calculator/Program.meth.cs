@@ -25,19 +25,24 @@ partial class Program
             stack.Push(d);
          else if (postfix[i] is Operation o)
          {
-            if (o.IsDependenceOfOrder)
+            if (stack.Count < 2)
+               throw new ArgumentException("Ошибка: недостаточно операндов");
+
+            if (o.IsDependenceOfOrder) //TODO: Сделать что то с этим свойством в будущем
             {
                double temp1 = (double)stack. Pop();
                double temp2 = (double)stack.Pop();
                stack.Push(o.OperationMeth(temp2, temp1));
             }
-            else
-               stack.Push(o.OperationMeth((double)stack.Pop(), (double)stack.Peek()));
+            else //По сути без полезное условие
+               stack.Push(o.OperationMeth((double)stack.Pop(), (double)stack.Pop()));
          }
       }
 
-      if (stack.Count == 1) return (double)stack.Peek();
-      else return -1;
+      if (stack.Count != 1) 
+         throw new ArgumentException("Ошибка: в вычислительном стеке больше одного элемента");
+
+      return (double)stack.Pop();
    }
    static object[] InfixToPostfix(object[] infix)
    {
