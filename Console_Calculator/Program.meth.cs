@@ -12,7 +12,7 @@ partial class Program
       { "-", new Operation("-", 1, (a, b) => a - b, true) },
       { "*", new Operation("*", 2, (a, b) => a * b, false) },
       { "/", new Operation("/", 2, (a, b) => a / b, true) },
-      //{ "^", new Operation("^", 3, (a, b) => Math.Pow(a, b), false) } //TODO: Протестировать является ли степень правой ассоциативной
+      { "^", new Operation("^", 3, (a, b) => Math.Pow(a, b), true) }
    };
 
    static object[] ParseInfixExpression(string expression)

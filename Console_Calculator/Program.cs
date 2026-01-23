@@ -28,9 +28,10 @@ partial class Program
             double result = CalculatePostfix(postfix);
             Console.WriteLine("Результат: " + result);
          }
-         catch (Exception ex)
+         catch (Exception e)
          {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine();
+            Console.WriteLine(e);
          }       
       }
    }
