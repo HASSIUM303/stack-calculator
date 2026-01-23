@@ -17,7 +17,27 @@ partial class Program
 
    static double CalculatePostfix(object[] postfix)
    {
-      
+      Stack<object> stack = new();
+
+      for (int i = 0; i < postfix.Length; i++)
+      {
+         if (postfix[i] is double d)
+            stack.Push(d);
+         else if (postfix[i] is Operation o)
+         {
+            if (o.IsDependenceOfOrder)
+            {
+               double temp1 = (double)stack. Pop();
+               double temp2 = (double)stack.Pop();
+               stack.Push(o.OperationMeth(temp2, temp1));
+            }
+            else
+               stack.Push(o.OperationMeth((double)stack.Pop(), (double)stack.Peek()));
+         }
+      }
+
+      if (stack.Count == 1) return (double)stack.Peek();
+      else return -1;
    }
    static object[] InfixToPostfix(object[] infix)
    {
@@ -133,11 +153,7 @@ class Operation
    public string SymbolName { get; }
    public uint Priority;
    public bool IsDependenceOfOrder { get; }
-   public event MathOperationDelegate OperationMeth
-   {
-      add { OperationMeth += value; }
-      remove { }
-   }
+   public MathOperationDelegate OperationMeth { get; private set; }
 
    public Operation(string SymbolName, int Priority, MathOperationDelegate meth, bool isOrder)
    {
