@@ -23,12 +23,14 @@ partial class Program
       List<object> tokens = new List<object>();
       string numberBuffer = "";
 
-      foreach (char c in expression)
+      for (int i = 0; i < expression.Length; i++)
       {
+         char c = expression[i];
+
          if (char.IsDigit(c) || c == '.')
-         {
             numberBuffer += c;
-         }
+         else if (c == '-' && IsUnaryMinus(tokens))
+            numberBuffer += c;
          else if (char.IsWhiteSpace(c))
          {
             if (numberBuffer != "")
@@ -61,6 +63,21 @@ partial class Program
          tokens.Add(double.Parse(numberBuffer));
 
       return tokens.ToArray();
+   }
+   static bool IsUnaryMinus(List<object> tokens)
+   {
+      if (tokens.Count == 0)
+         return true;
+      //Операция должна происходить после проверки!
+      object lastToken = tokens[tokens.Count - 1];
+
+      if (lastToken is string s && Brackets.ContainsKey(s[0]))
+         return true;
+
+      if (lastToken is Operation)
+         return true;
+
+      return false;
    }
    static object[] InfixToPostfix(object[] infix)
    {
