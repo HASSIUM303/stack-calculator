@@ -86,20 +86,20 @@ partial class Program
 
       for (int i = 0; i < infix.Length; i++)
       {
-         if (infix[i] is double)
+         if (infix[i] is double) //Операнд сразу попадает в ответ
             postfix.Add(infix[i]);
          else if (infix[i] is Operation obj)
          {
-            if (stack.Count == 0 || stack.Peek() is string)
+            if (stack.Count == 0 || stack.Peek() is string) //Если стек пуст или на его вершине скобка, мы кладём туда операцию
                stack.Push(obj);
             else if (stack.Peek() is Operation)
             {
                while (((Operation)stack.Peek()).Priority >= obj.Priority)
                {
-                  postfix.Add(stack.Pop());
+                  postfix.Add(stack.Pop()); //Выталкиваем в ответ все операции с большим либо равным приоритетом
                   if (stack.Count == 0 || stack.Peek() is not Operation) break;
                }
-               stack.Push(obj);
+               stack.Push(obj); //И в конце операция кладётся в стек
             }
          }
          else if (infix[i] is string s && s.Length == 1)
@@ -108,7 +108,7 @@ partial class Program
                stack.Push(s);
             else if (Brackets.ContainsValue(s[0]))
             {
-               while (stack.Peek() is not string) //Может вызвать проблемы в будущем, если будут другие типы
+               while (stack.Count > 0 && stack.Peek() is Operation)
                   postfix.Add(stack.Pop());
                stack.Pop();
             }
