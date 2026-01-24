@@ -196,7 +196,7 @@ class Operation
       if (Priority >= 0) this.Priority = (uint)Priority;
       else this.Priority = 0;
 
-      OperationMeth += meth; //TODO:
+      OperationMeth = meth;
 
       IsDependenceOfOrder = isOrder;
    }
