@@ -8,11 +8,11 @@ partial class Program
    };
    public static Dictionary<string, Operation> Operations { get; } = new Dictionary<string, Operation>
    {
-      { "+", new Operation("+", 1, (a, b) => a + b, false) },
-      { "-", new Operation("-", 1, (a, b) => a - b, true) },
-      { "*", new Operation("*", 2, (a, b) => a * b, false) },
-      { "/", new Operation("/", 2, (a, b) => a / b, true) },
-      { "^", new Operation("^", 3, (a, b) => Math.Pow(a, b), true) }
+      { "+", new Operation("+", 1, (a, b) => a + b) },
+      { "-", new Operation("-", 1, (a, b) => a - b) },
+      { "*", new Operation("*", 2, (a, b) => a * b) },
+      { "/", new Operation("/", 2, (a, b) => a / b) },
+      { "^", new Operation("^", 3, (a, b) => Math.Pow(a, b)) }
    };
 
    static object[] ParseInfixExpression(string expression)
@@ -133,14 +133,9 @@ partial class Program
             if (stack.Count < 2)
                throw new ArgumentException("Ошибка: недостаточно операндов");
 
-            if (o.IsDependenceOfOrder) //TODO: Сделать что то с этим свойством в будущем
-            {
-               double temp1 = (double)stack.Pop();
-               double temp2 = (double)stack.Pop();
-               stack.Push(o.OperationMeth(temp2, temp1));
-            }
-            else //По сути без полезное условие
-               stack.Push(o.OperationMeth((double)stack.Pop(), (double)stack.Pop()));
+            double temp1 = (double)stack.Pop();
+            double temp2 = (double)stack.Pop();
+            stack.Push(o.OperationMeth(temp2, temp1));
          }
       }
 
@@ -186,10 +181,9 @@ class Operation
 {
    public string SymbolName { get; }
    public uint Priority;
-   public bool IsDependenceOfOrder { get; }
    public MathOperationDelegate OperationMeth { get; private set; }
 
-   public Operation(string SymbolName, int Priority, MathOperationDelegate meth, bool isOrder)
+   public Operation(string SymbolName, int Priority, MathOperationDelegate meth)
    {
       this.SymbolName = SymbolName;
 
@@ -197,8 +191,6 @@ class Operation
       else this.Priority = 0;
 
       OperationMeth = meth;
-
-      IsDependenceOfOrder = isOrder;
    }
 }
 
