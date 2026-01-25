@@ -29,8 +29,15 @@ partial class Program
 
          if (char.IsDigit(c) || c == '.')
             numberBuffer += c;
-         else if (c == '-' && IsUnaryMinus(tokens))
+         else if (c == '-' && IsUnaryMinus(tokens, numberBuffer))
+         {
+            if (numberBuffer != "")
+            {
+               tokens.Add(double.Parse(numberBuffer));
+               numberBuffer = "";
+            }
             numberBuffer += c;
+         }
          else if (char.IsWhiteSpace(c))
          {
             if (numberBuffer != "")
@@ -64,18 +71,23 @@ partial class Program
 
       return tokens.ToArray();
    }
-   static bool IsUnaryMinus(List<object> tokens)
+   static bool IsUnaryMinus(List<object> tokens, string buffer)
    {
-      if (tokens.Count == 0)
-         return true;
-      //Операция должна происходить после проверки!
-      object lastToken = tokens[tokens.Count - 1];
+      bool hasTokens = tokens.Count == 0;
 
-      if (lastToken is string s && Brackets.ContainsKey(s[0]))
+      if (hasTokens && buffer == "")
          return true;
 
-      if (lastToken is Operation)
-         return true;
+      if (!hasTokens)
+      {
+         object lastToken = tokens[tokens.Count - 1];
+
+         if (lastToken is string s && Brackets.ContainsKey(s[0]))
+            return true;
+
+         if (lastToken is Operation)
+            return true;
+      }
 
       return false;
    }
@@ -120,7 +132,7 @@ partial class Program
 
       return postfix.ToArray();
    }
-   static double CalculatePostfix(object[] postfix) //TODO Провести рефакторинг
+   static double CalculatePostfix(object[] postfix)
    {
       Stack<double> stack = new();
 

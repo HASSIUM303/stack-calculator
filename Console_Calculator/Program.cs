@@ -31,6 +31,7 @@ partial class Program
          catch (Exception e)
          {
             Console.WriteLine();
+            Console.WriteLine(e.GetType().Name);
             Console.WriteLine(e);
          }       
       }
