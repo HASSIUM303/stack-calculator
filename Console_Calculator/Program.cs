@@ -7,7 +7,7 @@ partial class Program
       while (true)
       {
          Console.Write(">");
-         string input = Console.ReadLine() ?? "exit";
+         string input = Console.ReadLine() ?? "exit"; //TODO не возвращает null при вводе enter
          if (input == "exit") break;
 
          Console.WriteLine("\nВаш ввод с точки зрения скобок: " +
@@ -22,7 +22,7 @@ partial class Program
 
             Console.WriteLine("Преобразование инфиксной записи в постфиксную");
             object[] postfix = InfixToPostfix(infix);
-            Console.WriteLine("Постфиксная запись: " + String.Join(", ", postfix));
+            Console.WriteLine("Постфиксная запись: " + string.Join(", ", postfix));
 
             Console.WriteLine("Вычисление постфиксной записи");
             double result = CalculatePostfix(postfix);

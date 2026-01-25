@@ -204,6 +204,11 @@ class Operation
 
       OperationMeth = meth;
    }
+
+   public override string ToString()
+   {
+      return this.SymbolName;
+   }
 }
 
 public delegate double MathOperationDelegate(double num1, double num2);
