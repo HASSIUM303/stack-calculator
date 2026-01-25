@@ -7,33 +7,33 @@ partial class Program
       while (true)
       {
          Console.Write(">");
-         string input = Console.ReadLine() ?? "exit"; //TODO не возвращает null при вводе enter
-         if (input == "exit") break;
+         string input = Console.ReadLine() ?? "";
 
-         Console.WriteLine("\nВаш ввод с точки зрения скобок: " +
-         (ValidateAllBrackets(input) ? "корректен" : "некорректен"));
+         if (input == "exit" || string.IsNullOrEmpty(input)) break;
 
-         Console.WriteLine("Попытка парсинга строки в математическое выражение: ");
+         Console.WriteLine("\nВалидность скобочной последовательности: " + ValidateAllBrackets(input));
+
+         Console.WriteLine("Вычисление: ");
          try
          {
+            Console.WriteLine(" Разбиение строки на токены");
             object[] infix = ParseInfixExpression(input);
-            Console.WriteLine("Парсинг успешен!");
-            Console.WriteLine("Инфиксная запись: " + string.Join(", ", infix));
+            Console.WriteLine($" Токены инфиксной записи:\t[ {string.Join(", ", infix)} ]");
 
-            Console.WriteLine("Преобразование инфиксной записи в постфиксную");
+            Console.WriteLine("\n Преобразование инфиксной записи в постфиксную");
             object[] postfix = InfixToPostfix(infix);
-            Console.WriteLine("Постфиксная запись: " + string.Join(", ", postfix));
+            Console.WriteLine($" Токены постфиксной записи:\t[ {string.Join(", ", postfix)} ]");
 
-            Console.WriteLine("Вычисление постфиксной записи");
+            Console.WriteLine("\n Вычисление постфиксной записи");
             double result = CalculatePostfix(postfix);
-            Console.WriteLine("Результат: " + result);
+            Console.WriteLine(" Результат: " + result);
          }
          catch (Exception e)
          {
             Console.WriteLine();
             Console.WriteLine(e.GetType().Name);
             Console.WriteLine(e);
-         }       
+         }
       }
    }
 }
