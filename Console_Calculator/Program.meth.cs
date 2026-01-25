@@ -120,29 +120,29 @@ partial class Program
 
       return postfix.ToArray();
    }
-   static double CalculatePostfix(object[] postfix)
+   static double CalculatePostfix(object[] postfix) //TODO Провести рефакторинг
    {
-      Stack<object> stack = new();
+      Stack<double> stack = new();
 
       for (int i = 0; i < postfix.Length; i++)
       {
-         if (postfix[i] is double d)
-            stack.Push(d);
-         else if (postfix[i] is Operation o)
+         if (postfix[i] is double num)
+            stack.Push(num);
+         else if (postfix[i] is Operation operation)
          {
             if (stack.Count < 2)
                throw new ArgumentException("Ошибка: недостаточно операндов");
 
-            double temp1 = (double)stack.Pop();
-            double temp2 = (double)stack.Pop();
-            stack.Push(o.OperationMeth(temp2, temp1));
+            double temp1 = stack.Pop();
+            double temp2 = stack.Pop();
+            stack.Push(operation.OperationMeth(temp2, temp1));
          }
       }
 
       if (stack.Count != 1)
          throw new ArgumentException("Ошибка: в вычислительном стеке больше одного элемента");
 
-      return (double)stack.Pop();
+      return stack.Pop();
    }
    static bool ValidateAllBrackets(string brackets)
    {
