@@ -6,7 +6,7 @@ partial class Program
    {
       while (true)
       {
-         Console.Write(">");
+         Console.Write(">>>");
          string input = Console.ReadLine() ?? "";
 
          if (input == "exit" || string.IsNullOrEmpty(input)) break;
@@ -30,10 +30,39 @@ partial class Program
          }
          catch (Exception e)
          {
-            Console.WriteLine();
-            Console.WriteLine(e.GetType().Name);
-            Console.WriteLine(e);
+            StylizeMessage(() =>
+            {
+               Console.WriteLine();
+               Console.WriteLine(e.GetType().Name);
+               Console.WriteLine(e.Message);
+               Console.WriteLine("Нажмите Enter чтобы продолжить");
+            },
+            ConsoleColor.Red);
          }
+      }
+   }
+   static void StylizeMessage(Action meth, ConsoleColor color, bool CursorVisible = false)
+   {
+      ConsoleColor defaultColor = Console.ForegroundColor;
+      Console.ForegroundColor = color;
+
+      bool cursorSupported = true;
+      bool defaultVisible = true;
+
+      try { defaultVisible = Console.CursorVisible; }
+      catch (PlatformNotSupportedException) { cursorSupported = false; }
+      catch (IOException) { cursorSupported = false; }
+
+      if (cursorSupported) Console.CursorVisible = CursorVisible;
+
+      try
+      {
+         meth();
+      }
+      finally
+      {
+         Console.ForegroundColor = defaultColor;
+         if (cursorSupported) Console.CursorVisible = defaultVisible;
       }
    }
 }
