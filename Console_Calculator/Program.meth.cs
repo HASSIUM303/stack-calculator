@@ -23,10 +23,8 @@ partial class Program
       List<object> tokens = new List<object>();
       string numberBuffer = "";
 
-      for (int i = 0; i < expression.Length; i++)
+      foreach (char c in expression)
       {
-         char c = expression[i];
-
          if (char.IsDigit(c) || c == '.')
             numberBuffer += c;
          else if (c == '-' && IsUnaryMinus(tokens, numberBuffer))
@@ -73,12 +71,12 @@ partial class Program
    }
    static bool IsUnaryMinus(List<object> tokens, string buffer)
    {
-      bool hasTokens = tokens.Count == 0;
+      bool hasTokens = tokens.Count > 0;
 
-      if (hasTokens && buffer == "")
+      if (!hasTokens && buffer == "")
          return true;
 
-      if (!hasTokens)
+      if (hasTokens)
       {
          object lastToken = tokens[tokens.Count - 1];
 
