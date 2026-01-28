@@ -22,18 +22,20 @@ partial class Program
       if (string.IsNullOrWhiteSpace(expression))
          throw new ArgumentException("Выражение не может быть пустым");
 
+      expression = AllDotsToCommas(expression);
+
       List<object> tokens = new List<object>();
       string numberBuffer = "";
 
       foreach (char c in expression)
       {
-         if (char.IsDigit(c) || c == '.' || c == ',')
+         if (char.IsDigit(c) || c == ',')
             numberBuffer += c;
-         else if (c == '-' && IsUnaryMinus(tokens, numberBuffer))
+         else if (c == '-' && IsUnaryMinus())
          {
             if (numberBuffer != "")
             {
-               tokens.Add(double.Parse(numberBuffer, CultureInfo.InvariantCulture));
+               tokens.Add(double.Parse(numberBuffer));
                numberBuffer = "";
             }
             numberBuffer += c;
@@ -42,7 +44,7 @@ partial class Program
          {
             if (numberBuffer != "")
             {
-               tokens.Add(double.Parse(numberBuffer, CultureInfo.InvariantCulture));
+               tokens.Add(double.Parse(numberBuffer));
                numberBuffer = "";
             }
          }
@@ -50,7 +52,7 @@ partial class Program
          {
             if (numberBuffer != "")
             {
-               tokens.Add(double.Parse(numberBuffer, CultureInfo.InvariantCulture));
+               tokens.Add(double.Parse(numberBuffer));
                numberBuffer = "";
             }
             tokens.Add(c.ToString());
@@ -59,7 +61,7 @@ partial class Program
          {
             if (numberBuffer != "")
             {
-               tokens.Add(double.Parse(numberBuffer, CultureInfo.InvariantCulture));
+               tokens.Add(double.Parse(numberBuffer));
                numberBuffer = "";
             }
             tokens.Add(Operations[c.ToString()]);
@@ -67,29 +69,41 @@ partial class Program
       }
 
       if (numberBuffer != "")
-         tokens.Add(double.Parse(numberBuffer, CultureInfo.InstalledUICulture));
+         tokens.Add(double.Parse(numberBuffer));
 
       return tokens.ToArray();
-   }
-   static bool IsUnaryMinus(List<object> tokens, string buffer)
-   {
-      bool hasTokens = tokens.Count > 0;
 
-      if (!hasTokens && buffer == "")
-         return true;
 
-      if (hasTokens)
+      static string AllDotsToCommas(string input)
       {
-         object lastToken = buffer == "" ? tokens[tokens.Count - 1] : buffer;
+         if (input.Contains(',') && input.Contains('.'))
+            throw new ArgumentException("Ошибка: строка содержит одновременно запятые и точки");
+         else if (input.Contains('.'))
+            return input.Replace('.', ',');
 
-         if (lastToken is string s && Brackets.ContainsKey(s[0]))
-            return true;
-
-         if (lastToken is Operation)
-            return true;
+         return input;
       }
 
-      return false;
+      bool IsUnaryMinus()
+      {
+         bool hasTokens = tokens.Count > 0;
+
+         if (!hasTokens && numberBuffer == "")
+            return true;
+
+         if (hasTokens)
+         {
+            object lastToken = numberBuffer == "" ? tokens[tokens.Count - 1] : numberBuffer;
+
+            if (lastToken is string s && Brackets.ContainsKey(s[0]))
+               return true;
+
+            if (lastToken is Operation)
+               return true;
+         }
+
+         return false;
+      }
    }
    static object[] InfixToPostfix(object[] infix)
    {
