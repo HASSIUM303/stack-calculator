@@ -1,3 +1,5 @@
+using System.Globalization;
+
 partial class Program
 {
    public static Dictionary<char, char> Brackets { get; } = new Dictionary<char, char>
@@ -25,13 +27,13 @@ partial class Program
 
       foreach (char c in expression)
       {
-         if (char.IsDigit(c) || c == '.')
+         if (char.IsDigit(c) || c == '.' || c == ',')
             numberBuffer += c;
          else if (c == '-' && IsUnaryMinus(tokens, numberBuffer))
          {
             if (numberBuffer != "")
             {
-               tokens.Add(double.Parse(numberBuffer));
+               tokens.Add(double.Parse(numberBuffer, CultureInfo.InvariantCulture));
                numberBuffer = "";
             }
             numberBuffer += c;
@@ -40,7 +42,7 @@ partial class Program
          {
             if (numberBuffer != "")
             {
-               tokens.Add(double.Parse(numberBuffer));
+               tokens.Add(double.Parse(numberBuffer, CultureInfo.InvariantCulture));
                numberBuffer = "";
             }
          }
@@ -48,7 +50,7 @@ partial class Program
          {
             if (numberBuffer != "")
             {
-               tokens.Add(double.Parse(numberBuffer));
+               tokens.Add(double.Parse(numberBuffer, CultureInfo.InvariantCulture));
                numberBuffer = "";
             }
             tokens.Add(c.ToString());
@@ -57,7 +59,7 @@ partial class Program
          {
             if (numberBuffer != "")
             {
-               tokens.Add(double.Parse(numberBuffer));
+               tokens.Add(double.Parse(numberBuffer, CultureInfo.InvariantCulture));
                numberBuffer = "";
             }
             tokens.Add(Operations[c.ToString()]);
@@ -65,7 +67,7 @@ partial class Program
       }
 
       if (numberBuffer != "")
-         tokens.Add(double.Parse(numberBuffer));
+         tokens.Add(double.Parse(numberBuffer, CultureInfo.InstalledUICulture));
 
       return tokens.ToArray();
    }
