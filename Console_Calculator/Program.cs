@@ -35,7 +35,15 @@ partial class Program
                Console.WriteLine();
                Console.WriteLine(e.GetType().Name);
                Console.WriteLine(e.Message);
+
+               Console.WriteLine();
+               Console.WriteLine("Программа: " + e.Source);
+               Console.WriteLine("Метод: " + e.TargetSite.Name);
+               Console.WriteLine("Место ошибки:\n" + e.StackTrace);
+               Console.WriteLine();
+
                Console.WriteLine("Нажмите Enter чтобы продолжить");
+               Console.ReadKey();
             },
             ConsoleColor.Red);
          }
