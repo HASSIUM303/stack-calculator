@@ -78,7 +78,7 @@ partial class Program
 
       if (hasTokens)
       {
-         object lastToken = tokens[tokens.Count - 1];
+         object lastToken = buffer == "" ? tokens[tokens.Count - 1] : buffer;
 
          if (lastToken is string s && Brackets.ContainsKey(s[0]))
             return true;
