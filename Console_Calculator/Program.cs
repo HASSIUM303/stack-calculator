@@ -6,7 +6,7 @@ partial class Program
    {
       while (true)
       {
-         Console.Write(">>>");
+         Console.Write(">>> ");
          string input = Console.ReadLine() ?? "";
 
          if (input == "exit" || string.IsNullOrEmpty(input)) break;
@@ -18,11 +18,11 @@ partial class Program
          {
             Console.WriteLine(" Разбиение строки на токены");
             object[] infix = ParseInfixExpression(input);
-            Console.WriteLine($" Токены инфиксной записи:\t[ {string.Join(", ", infix)} ]");
+            Console.WriteLine($" Токены инфиксной записи:\t[ {string.Join("; ", infix)} ]");
 
             Console.WriteLine("\n Преобразование инфиксной записи в постфиксную");
             object[] postfix = InfixToPostfix(infix);
-            Console.WriteLine($" Токены постфиксной записи:\t[ {string.Join(", ", postfix)} ]");
+            Console.WriteLine($" Токены постфиксной записи:\t[ {string.Join("; ", postfix)} ]");
 
             Console.WriteLine("\n Вычисление постфиксной записи");
             double result = CalculatePostfix(postfix);

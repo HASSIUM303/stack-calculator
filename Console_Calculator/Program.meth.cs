@@ -77,7 +77,7 @@ partial class Program
       static string AllDotsToCommas(string input)
       {
          if (input.Contains(',') && input.Contains('.'))
-            throw new ArgumentException("Ошибка: строка содержит одновременно запятые и точки");
+            throw new ArgumentException("Строка содержит одновременно запятые и точки");
          else if (input.Contains('.'))
             return input.Replace('.', ',');
 
@@ -112,20 +112,20 @@ partial class Program
 
       for (int i = 0; i < infix.Length; i++)
       {
-         if (infix[i] is double) //Операнд сразу попадает в ответ
+         if (infix[i] is double)
             postfix.Add(infix[i]);
          else if (infix[i] is Operation obj)
          {
-            if (stack.Count == 0 || stack.Peek() is string) //Если стек пуст или на его вершине скобка, мы кладём туда операцию
+            if (stack.Count == 0 || stack.Peek() is string)
                stack.Push(obj);
             else if (stack.Peek() is Operation)
             {
                while (((Operation)stack.Peek()).Priority >= obj.Priority)
                {
-                  postfix.Add(stack.Pop()); //Выталкиваем в ответ все операции с большим либо равным приоритетом
+                  postfix.Add(stack.Pop());
                   if (stack.Count == 0 || stack.Peek() is not Operation) break;
                }
-               stack.Push(obj); //И в конце операция кладётся в стек
+               stack.Push(obj);
             }
          }
          else if (infix[i] is string s && s.Length == 1)
@@ -157,7 +157,7 @@ partial class Program
          else if (postfix[i] is Operation operation)
          {
             if (stack.Count < 2)
-               throw new ArgumentException("Ошибка: недостаточно операндов");
+               throw new ArgumentException("Недостаточно операндов");
 
             double temp1 = stack.Pop();
             double temp2 = stack.Pop();
@@ -166,7 +166,7 @@ partial class Program
       }
 
       if (stack.Count != 1)
-         throw new ArgumentException("Ошибка: в вычислительном стеке больше одного элемента");
+         throw new ArgumentException("В вычислительном стеке больше одного элемента");
 
       return stack.Pop();
    }
