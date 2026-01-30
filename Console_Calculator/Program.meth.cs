@@ -14,7 +14,8 @@ partial class Program
       { "-", new Operation("-", 1, (a, b) => a - b) },
       { "*", new Operation("*", 2, (a, b) => a * b) },
       { "/", new Operation("/", 2, (a, b) => a / b) },
-      { "^", new Operation("^", 3, (a, b) => Math.Pow(a, b)) }
+      { "^", new Operation("^", 3, (a, b) => Math.Pow(a, b)) },
+      { "**", Operations["^"]}
    };
 
    static object[] ParseInfixExpression(string expression)

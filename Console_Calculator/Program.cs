@@ -6,16 +6,18 @@ partial class Program
    {
       while (true)
       {
-         Console.Write(">>> ");
-         string input = Console.ReadLine() ?? "";
-
-         if (input == "exit" || string.IsNullOrEmpty(input)) break;
-
-         Console.WriteLine("\nВалидность скобочной последовательности: " + ValidateAllBrackets(input));
-
-         Console.WriteLine("Вычисление: ");
          try
          {
+            Console.Write(">>> ");
+            string input = Console.ReadLine() ?? "";
+
+            if (input == "exit" || string.IsNullOrEmpty(input)) break;
+
+            Console.WriteLine("\nВалидность скобочной последовательности: " + ValidateAllBrackets(input));
+
+            Console.WriteLine("Вычисление: ");
+
+
             Console.WriteLine(" Разбиение строки на токены");
             object[] infix = ParseInfixExpression(input);
             Console.WriteLine($" Токены инфиксной записи:\t[ {string.Join("; ", infix)} ]");
@@ -38,7 +40,7 @@ partial class Program
 
                Console.WriteLine();
                Console.WriteLine("Программа: " + e.Source);
-               Console.WriteLine("Метод: " + e.TargetSite.Name);
+               Console.WriteLine("Метод: " + e.TargetSite?.Name);
                Console.WriteLine("Место ошибки:\n" + e.StackTrace);
                Console.WriteLine();
 
