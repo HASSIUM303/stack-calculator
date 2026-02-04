@@ -1,10 +1,21 @@
 using System;
 
-public interface IOperation
+public abstract class OperationBase
 {
-   string Symbol { get; }
-   int Priority { get; }
-   double Apply(double left, double right);
+   public string Symbol { get; }
+   public int Priority { get; }
+   protected OperationBase(string symbol, int priority)
+   {
+      Symbol = symbol;
+      Priority = priority;
+   }
+   public abstract double Apply(double a, double b);
+}
+
+class AddOperation : OperationBase
+{
+   public AddOperation(string symbol, int priority) : base(symbol, priority) { }
+   public override double Apply(double a, double b) => a + b;
 }
 
 class Operation
