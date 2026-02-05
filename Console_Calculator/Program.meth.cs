@@ -123,16 +123,16 @@ partial class Program
       {
          if (infix[i] is double)
             postfix.Add(infix[i]);
-         else if (infix[i] is Operation obj)
+         else if (infix[i] is OperationBase obj)
          {
             if (stack.Count == 0 || stack.Peek() is string)
                stack.Push(obj);
-            else if (stack.Peek() is Operation)
+            else if (stack.Peek() is OperationBase)
             {
-               while (((Operation)stack.Peek()).Priority >= obj.Priority)
+               while (((OperationBase)stack.Peek()).Priority >= obj.Priority)
                {
                   postfix.Add(stack.Pop());
-                  if (stack.Count == 0 || stack.Peek() is not Operation) break;
+                  if (stack.Count == 0 || stack.Peek() is not OperationBase) break;
                }
                stack.Push(obj);
             }
@@ -143,7 +143,7 @@ partial class Program
                stack.Push(s);
             else if (Brackets.ContainsValue(s[0]))
             {
-               while (stack.Count > 0 && stack.Peek() is Operation)
+               while (stack.Count > 0 && stack.Peek() is OperationBase)
                   postfix.Add(stack.Pop());
                stack.Pop();
             }
@@ -163,14 +163,14 @@ partial class Program
       {
          if (postfix[i] is double num)
             stack.Push(num);
-         else if (postfix[i] is Operation operation)
+         else if (postfix[i] is OperationBase operation)
          {
             if (stack.Count < 2)
                throw new ArgumentException("Недостаточно операндов");
 
             double temp1 = stack.Pop();
             double temp2 = stack.Pop();
-            stack.Push(operation.OperationMeth(temp2, temp1));
+            stack.Push(operation.Apply(temp2, temp1));
          }
       }
 
