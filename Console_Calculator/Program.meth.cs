@@ -8,15 +8,23 @@ partial class Program
      {'[', ']'},
      {'{', '}'}
    };
-   public static Dictionary<string, Operation> Operations { get; } = new Dictionary<string, Operation>
+
+   public static Dictionary<string, OperationBase> Operations { get; }
+
+   static Program()
    {
-      { "+", new Operation("+", 1, (a, b) => a + b) },
-      { "-", new Operation("-", 1, (a, b) => a - b) },
-      { "*", new Operation("*", 2, (a, b) => a * b) },
-      { "/", new Operation("/", 2, (a, b) => a / b) },
-      { "^", new Operation("^", 3, (a, b) => Math.Pow(a, b)) },
-      { "**", Operations["^"]}
-   };
+      var power = new PowerOperation("^", 3);
+
+      Operations = new Dictionary<string, OperationBase>
+      {
+         { "+", new AddOperation("+", 1) },
+         { "-", new SubtractOperation("-", 1) },
+         { "*", new MultiplyOperation("*", 2) },
+         { "/", new DivideOperation("/", 2) },
+         { "^", power },
+         { "**", power }
+      };
+   }
 
    static object[] ParseInfixExpression(string expression)
    {
