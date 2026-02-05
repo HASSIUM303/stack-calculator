@@ -107,7 +107,7 @@ partial class Program
             if (lastToken is string s && Brackets.ContainsKey(s[0]))
                return true;
 
-            if (lastToken is Operation)
+            if (lastToken is OperationBase)
                return true;
          }
 
