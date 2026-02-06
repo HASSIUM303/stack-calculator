@@ -37,6 +37,7 @@ partial class Program
 
       List<object> tokens = new List<object>();
       string numberBuffer = "";
+      Dictionary<OperationBase, string> usedAliases = new();
 
       for (int i = 0; i < expression.Length; i++)
       {
@@ -91,7 +92,13 @@ partial class Program
                   tokens.Add(double.Parse(numberBuffer));
                   numberBuffer = "";
                }
-               tokens.Add(Operations[op]);
+               OperationBase operation = Operations[op];
+
+               if (usedAliases.TryGetValue(operation, out var alias) && alias != op)
+                  throw new ArgumentException($"Оператор {op} нельзя смешивать с алиасом {alias} в одном выражении");
+
+               usedAliases[operation] = op;
+               tokens.Add(operation);
             }
          }
       }
