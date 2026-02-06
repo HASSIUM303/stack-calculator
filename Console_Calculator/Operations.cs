@@ -9,7 +9,19 @@ public abstract class OperationBase
       Symbol = symbol;
       Priority = priority;
    }
-   public abstract double Apply(double a, double b);
+   public virtual double Apply(double a, double b)
+   {
+      throw new NotSupportedException("Операция не поддерживает бинарное применение");
+   }
+}
+
+interface IUnaryOperation
+{
+   double Apply(double a);
+}
+interface ITernaryOperation
+{
+   double Apply(double a, double b, double c);
 }
 
 class AddOperation : OperationBase
