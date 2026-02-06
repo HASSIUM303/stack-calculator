@@ -36,8 +36,10 @@ partial class Program
       List<object> tokens = new List<object>();
       string numberBuffer = "";
 
-      foreach (char c in expression)
+      for (int i = 0; i < expression.Length; i++)
       {
+         char c = expression[i];
+
          if (char.IsDigit(c) || c == ',')
             numberBuffer += c;
          else if (c == '-' && IsUnaryMinus())
@@ -66,14 +68,29 @@ partial class Program
             }
             tokens.Add(c.ToString());
          }
-         else if (Operations.ContainsKey(c.ToString()))
+         else
          {
-            if (numberBuffer != "")
+            string op = null;
+
+            if (c == '*' && i + 1 < expression.Length && expression[i + 1] == '*')
             {
-               tokens.Add(double.Parse(numberBuffer));
-               numberBuffer = "";
+               op = "**";
+               i++;
             }
-            tokens.Add(Operations[c.ToString()]);
+            else
+            {
+               op = c.ToString();
+            }
+
+            if (Operations.ContainsKey(op))
+            {
+               if (numberBuffer != "")
+               {
+                  tokens.Add(double.Parse(numberBuffer));
+                  numberBuffer = "";
+               }
+               tokens.Add(Operations[op]);
+            }
          }
       }
 
