@@ -14,13 +14,15 @@ partial class Program
    static Program()
    {
       var power = new PowerOperation("^", 3);
+      var divide = new DivideOperation("/", 2);
 
       Operations = new Dictionary<string, OperationBase>
       {
          { "+", new AddOperation("+", 1) },
          { "-", new SubtractOperation("-", 1) },
          { "*", new MultiplyOperation("*", 2) },
-         { "/", new DivideOperation("/", 2) },
+         { "/", divide },
+         { ":", divide },
          { "^", power },
          { "**", power }
       };
