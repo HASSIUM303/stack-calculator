@@ -182,12 +182,14 @@ partial class Program
             stack.Push(num);
          else if (postfix[i] is OperationBase operation)
          {
-            if (stack.Count < 2)
+            if (stack.Count < operation.Arity)
                throw new ArgumentException("Недостаточно операндов");
 
-            double temp1 = stack.Pop();
-            double temp2 = stack.Pop();
-            stack.Push(operation.Apply(temp2, temp1));
+            double[] args = new double[operation.Arity];
+            for (int k = operation.Arity - 1; k >= 0; k--)
+               args[k] = stack.Pop();
+
+            stack.Push(operation.Apply(args));
          }
       }
 

@@ -4,15 +4,24 @@ public abstract class OperationBase
 {
    public string Symbol { get; }
    public int Priority { get; }
-   protected OperationBase(string symbol, int priority)
+   public int Arity { get; }
+
+   protected OperationBase(string symbol, int priority, int arity)
    {
       Symbol = symbol;
       Priority = priority;
+      Arity = arity;
    }
-   public virtual double Apply(double a, double b)
+   public double Apply(params double[] args)
    {
-      throw new NotSupportedException("Операция не поддерживает бинарное применение");
+      if (args == null) throw new ArgumentNullException(nameof(args));
+      if (args.Length != Arity)
+         throw new ArgumentException($"Ожидалось {Arity} аргументов, получено {args.Length}");
+
+      return DoApply(args.AsSpan());
    }
+
+   protected abstract double DoApply(ReadOnlySpan<double> args);
 }
 
 interface IUnaryOperation
@@ -26,28 +35,33 @@ interface ITernaryOperation
 
 class AddOperation : OperationBase
 {
-   public AddOperation(string symbol, int priority) : base(symbol, priority) { }
+   public AddOperation(string symbol, int priority) : base(symbol, priority, 2) { }
    public override double Apply(double a, double b) => a + b;
+   protected override double DoApply(ReadOnlySpan<double> args) => args[0] + args[1];
 }
 class SubtractOperation : OperationBase
 {
-   public SubtractOperation(string symbol, int priority) : base(symbol, priority) { }
+   public SubtractOperation(string symbol, int priority) : base(symbol, priority, 2) { }
    public override double Apply(double a, double b) => a - b;
+   protected override double DoApply(ReadOnlySpan<double> args) => args[0] - args[1];
 }
 class MultiplyOperation : OperationBase
 {
-   public MultiplyOperation(string symbol, int priority) : base(symbol, priority) { }
+   public MultiplyOperation(string symbol, int priority) : base(symbol, priority, 2) { }
    public override double Apply(double a, double b) => a * b;
+   protected override double DoApply(ReadOnlySpan<double> args) => args[0] * args[1];
 }
 
 class DivideOperation : OperationBase
 {
-   public DivideOperation(string symbol, int priority) : base(symbol, priority) { }
+   public DivideOperation(string symbol, int priority) : base(symbol, priority, 2) { }
    public override double Apply(double a, double b) => a / b;
+   protected override double DoApply(ReadOnlySpan<double> args) => args[0] / args[1];
 }
 
 class PowerOperation : OperationBase
 {
-   public PowerOperation(string symbol, int priority) : base(symbol, priority) { }
+   public PowerOperation(string symbol, int priority) : base(symbol, priority, 2) { }
    public override double Apply(double a, double b) => Math.Pow(a, b);
+   protected override double DoApply(ReadOnlySpan<double> args) => Math.Pow(args[0], args[1]);
 }
