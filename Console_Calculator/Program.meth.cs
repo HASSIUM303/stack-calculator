@@ -47,33 +47,21 @@ partial class Program
             numberBuffer += c;
          else if (c == '-' && IsUnaryMinus())
          {
-            if (numberBuffer != "")
-            {
-               tokens.Add(double.Parse(numberBuffer));
-               numberBuffer = "";
-            }
+            if (numberBuffer != "") AddAndClearBuffer();
             numberBuffer += c;
          }
          else if (char.IsWhiteSpace(c))
          {
-            if (numberBuffer != "")
-            {
-               tokens.Add(double.Parse(numberBuffer));
-               numberBuffer = "";
-            }
+            if (numberBuffer != "") AddAndClearBuffer();
          }
          else if (Brackets.ContainsKey(c) || Brackets.ContainsValue(c))
          {
-            if (numberBuffer != "")
-            {
-               tokens.Add(double.Parse(numberBuffer));
-               numberBuffer = "";
-            }
+            if (numberBuffer != "") AddAndClearBuffer();
             tokens.Add(c.ToString());
          }
          else
          {
-            string op = null;
+            string? op = null;
 
             if (c == '*' && i + 1 < expression.Length && expression[i + 1] == '*')
             {
@@ -87,11 +75,8 @@ partial class Program
 
             if (Operations.ContainsKey(op))
             {
-               if (numberBuffer != "")
-               {
-                  tokens.Add(double.Parse(numberBuffer));
-                  numberBuffer = "";
-               }
+               if (numberBuffer != "") AddAndClearBuffer();
+
                OperationBase operation = Operations[op];
 
                if (usedAliases.TryGetValue(operation, out var alias) && alias != op)
@@ -109,10 +94,16 @@ partial class Program
       return tokens.ToArray();
 
 
+      void AddAndClearBuffer()
+      {
+         tokens.Add(double.Parse(numberBuffer));
+         numberBuffer = "";
+      }
+
       static string AllDotsToCommas(string input)
       {
          if (input.Contains(',') && input.Contains('.'))
-            throw new ArgumentException("Строка содержит одновременно запятые и точки");
+            throw new ArgumentException("Выражение не может одновременно содержать запятые и точки");
          else if (input.Contains('.'))
             return input.Replace('.', ',');
 
