@@ -12,6 +12,7 @@ public abstract class OperationBase
       Priority = priority;
       Arity = arity;
    }
+
    public double Apply(params double[] args)
    {
       if (args == null) throw new ArgumentNullException(nameof(args));
@@ -24,44 +25,30 @@ public abstract class OperationBase
    protected abstract double DoApply(ReadOnlySpan<double> args);
 }
 
-interface IUnaryOperation
-{
-   double Apply(double a);
-}
-interface ITernaryOperation
-{
-   double Apply(double a, double b, double c);
-}
-
 class AddOperation : OperationBase
 {
    public AddOperation(string symbol, int priority) : base(symbol, priority, 2) { }
-   public override double Apply(double a, double b) => a + b;
    protected override double DoApply(ReadOnlySpan<double> args) => args[0] + args[1];
 }
 class SubtractOperation : OperationBase
 {
    public SubtractOperation(string symbol, int priority) : base(symbol, priority, 2) { }
-   public override double Apply(double a, double b) => a - b;
    protected override double DoApply(ReadOnlySpan<double> args) => args[0] - args[1];
 }
 class MultiplyOperation : OperationBase
 {
    public MultiplyOperation(string symbol, int priority) : base(symbol, priority, 2) { }
-   public override double Apply(double a, double b) => a * b;
    protected override double DoApply(ReadOnlySpan<double> args) => args[0] * args[1];
 }
 
 class DivideOperation : OperationBase
 {
    public DivideOperation(string symbol, int priority) : base(symbol, priority, 2) { }
-   public override double Apply(double a, double b) => a / b;
    protected override double DoApply(ReadOnlySpan<double> args) => args[0] / args[1];
 }
 
 class PowerOperation : OperationBase
 {
    public PowerOperation(string symbol, int priority) : base(symbol, priority, 2) { }
-   public override double Apply(double a, double b) => Math.Pow(a, b);
    protected override double DoApply(ReadOnlySpan<double> args) => Math.Pow(args[0], args[1]);
 }
